@@ -15,5 +15,6 @@ class PaintingPopulation:
         :return: image of brushes
         """
         canvas = np.ones(self.objective.shape)
+        canvas.fill(255)
 
         return canvas
