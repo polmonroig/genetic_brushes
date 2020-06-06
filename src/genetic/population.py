@@ -1,11 +1,12 @@
 import numpy as np
 import cv2
 from genetic.individual import IndividualBrush
+from operators.operator import Mutation, Crossover, Selection
 
 
 class PaintingPopulation:
     """
-    A population contains a lot of individuals, that act independently,
+    A population contains a lot of individuals that act independently,
     this population updates over time and tries to improve to reach
     its objective. A population represents a canvas of that has the
     same shape as the objective shape, it is initially empty, but
@@ -21,6 +22,7 @@ class PaintingPopulation:
     self.size  (float): the initial size of the population
     self.canvas (matrix): represents the white image with all the brushes
     self.individuals (array): list of all the brushes in the canvas in the current generation
+    self.operators (array): list of operators that are applied to the population on an update
     """
 
     def __init__(self, objective, initial_size):
@@ -29,6 +31,16 @@ class PaintingPopulation:
         self.canvas = None
         self.individuals = []
         self.randomize()
+        self.operators = [Mutation(), Crossover(), Selection()]
+
+    def update(self):
+        # first apply operators
+        for operator in self.operators:
+            self.individuals = operator.op(self.individuals)
+        # update colors
+        for ind in self.individuals:
+            color = self.objective[ind.pos[1], ind.pos[0]] / 255.0
+            ind.set_color(color)
 
     def randomize(self):
         for i in range(self.size):
@@ -69,7 +81,7 @@ class PaintingPopulation:
         alpha_image = image[:, :, 0] / 255.0
         alpha_canvas = 1.0 - alpha_image
         for c in range(0, 3):
-            self.canvas[pos_y:pos_y + height, pos_x:pos_x + width, c] = (alpha_image * image[:, :, c] +
-                                      alpha_canvas * self.canvas[pos_y:pos_y + height, pos_x:pos_x + width, c])
+            self.canvas[pos_y:pos_y + height, pos_x:pos_x + width, c] = (1 * image[:, :, c] +
+                                      0 * self.canvas[pos_y:pos_y + height, pos_x:pos_x + width, c])
 
 
