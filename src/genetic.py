@@ -1,11 +1,16 @@
-from genetic.genetic import Genetic
+from src.genetic.genetic import Genetic
 import sys
 
 REQUIRED_ARGS = 2
 
 
 def usage():
-    print("Wrong args")
+    """
+    Outputs program usage and exits
+    :return: None
+    """
+    print("genetic: genetic image")
+    print("image: image to generate")
     exit(1)
 
 
@@ -15,7 +20,9 @@ def main():
         usage()
     print('Starting application...')
     image_file = sys.argv[1]
-    gen = Genetic(image_file)
+    error_margin = 0.1
+    gen = Genetic(image_file, error_margin)
+    gen.start(10)
 
 
 if __name__ == '__main__':
