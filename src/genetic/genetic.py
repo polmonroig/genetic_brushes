@@ -44,8 +44,7 @@ class Genetic:
 
             # save frame to disk
             sample = population.image()
-            cv2.imshow("sample_" + str(it), sample)
-            cv2.waitKey(0)
+            cv2.imwrite("frames/sample_" + str(it), sample)
             # update loop conditions
             error = heuristic.error(self.objective, sample)
             print("Error:", error)
