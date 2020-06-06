@@ -58,10 +58,18 @@ class PaintingPopulation:
         return self.canvas
 
     def insert_image(self, pos, image):
-        pos_x = pos[0]  # x == col
-        pos_y = pos[1]  # y == row
         width = image.shape[1]
         height = image.shape[0]
-        print("Inserting image of shape", image.shape, "at pos", pos)
+        pos_x = pos[0]  # x == col
+        if pos_x >= self.canvas.shape[1] - width:
+            pos_x = self.canvas.shape[1] - width
+        pos_y = pos[1]  # y == row
+        if pos_y >= self.canvas.shape[0] - height:
+            pos_y = self.canvas.shape[0] - height
+        alpha_image = image[:, :, 0] / 255.0
+        alpha_canvas = 1.0 - alpha_image
+        for c in range(0, 3):
+            self.canvas[pos_y:pos_y + height, pos_x:pos_x + width, c] = (alpha_image * image[:, :, c] +
+                                      alpha_canvas * self.canvas[pos_y:pos_y + height, pos_x:pos_x + width, c])
 
-        self.canvas[pos_y:pos_y + height, pos_x:pos_x + width] = image
+

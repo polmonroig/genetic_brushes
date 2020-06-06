@@ -34,8 +34,8 @@ class Genetic:
         IndividualBrush.add_brush("resource/1.jpg")
         IndividualBrush.add_brush("resource/2.jpg")
         IndividualBrush.add_brush("resource/3.jpg")
-        IndividualBrush.max_pos_x = self.objective.shape[1] - 50
-        IndividualBrush.max_pos_y = self.objective.shape[0] - 50
+        IndividualBrush.max_pos_x = self.objective.shape[1]
+        IndividualBrush.max_pos_y = self.objective.shape[0]
         error = self.margin  # allow first iteration
         it = 0
         population = PaintingPopulation(self.objective, size)
