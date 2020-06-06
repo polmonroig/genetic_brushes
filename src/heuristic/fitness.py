@@ -1,4 +1,4 @@
-
+import numpy as np
 
 class FitnessFunction:
     """
@@ -10,4 +10,5 @@ class FitnessFunction:
     brushes
     """
     def error(self, original, generated):
-        return 0
+        mse = np.square(original - generated).mean()
+        return mse

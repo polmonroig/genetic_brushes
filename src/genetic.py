@@ -1,4 +1,5 @@
 from genetic.genetic import Genetic
+from random import seed
 import sys
 
 REQUIRED_ARGS = 2
@@ -19,6 +20,7 @@ def main():
     if len(sys.argv) < REQUIRED_ARGS:
         usage()
     print('Starting brushing...')
+    # seed(342)
     image_file = sys.argv[1]
     error_margin = 0.1
     gen = Genetic(image_file, error_margin)

@@ -34,7 +34,8 @@ class PaintingPopulation:
         for i in range(self.size):
             brush = IndividualBrush()
             brush.randomize()
-            brush.set_color(np.array([0, 0, 0]))
+            color = self.objective[brush.pos[1], brush.pos[0]] / 255.0
+            brush.set_color(color)
             self.individuals.append(brush)
 
     def image(self):
@@ -44,13 +45,23 @@ class PaintingPopulation:
         :return: image of brushes
         """
         if self.canvas is None:
-            self.canvas = np.ones(self.objective.shape)
+            self.canvas = np.ones(self.objective.shape, dtype=np.uint8)
             self.canvas.fill(255)
         for ind in self.individuals:
             print("Loading image", ind.brush)
             image = cv2.imread(ind.brush)
+            dim = (int(image.shape[0] * ind.size), int(image.shape[1] * ind.size))
+            image = cv2.resize(image, dim)
             image = image * ind.color
-            self.canvas[ind.pos[0]:ind.pos[1] + image.shape[0], ind.pos[0]:ind.pos[0] + image.shape[1]] = image
-            self.canvas = image
+            self.insert_image(ind.pos, image)
 
         return self.canvas
+
+    def insert_image(self, pos, image):
+        pos_x = pos[0]  # x == col
+        pos_y = pos[1]  # y == row
+        width = image.shape[1]
+        height = image.shape[0]
+        print("Inserting image of shape", image.shape, "at pos", pos)
+
+        self.canvas[pos_y:pos_y + height, pos_x:pos_x + width] = image

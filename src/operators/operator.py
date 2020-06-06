@@ -12,7 +12,7 @@ class Mutation:
         :param individuals: objects where the operation will be applied
         :return: list of resulting offsprings based on the operation
         """
-        return [individuals]
+        return individuals
 
 
 class Selection:
@@ -26,7 +26,7 @@ class Selection:
         :param individuals: objects where the operation will be applied
         :return: list of resulting offsprings based on the operation
         """
-        return [individuals]
+        return individuals
 
 
 class Crossover:
@@ -41,4 +41,4 @@ class Crossover:
         :param individuals: parent objects where the operation will be applied
         :return: list of resulting offsprings based on the operation
         """
-        return [individuals]
+        return individuals
