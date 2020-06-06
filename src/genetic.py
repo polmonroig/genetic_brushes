@@ -1,4 +1,4 @@
-from src.genetic.genetic import Genetic
+from genetic.genetic import Genetic
 import sys
 
 REQUIRED_ARGS = 2
@@ -18,7 +18,7 @@ def main():
     # parse arguments
     if len(sys.argv) < REQUIRED_ARGS:
         usage()
-    print('Starting application...')
+    print('Starting brushing...')
     image_file = sys.argv[1]
     error_margin = 0.1
     gen = Genetic(image_file, error_margin)

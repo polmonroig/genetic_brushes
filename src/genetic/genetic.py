@@ -1,6 +1,6 @@
-from src.genetic.population import PaintingPopulation
-from src.heuristic.fitness import FitnessFunction
-from src.genetic.individual import IndividualBrush
+from genetic.population import PaintingPopulation
+from heuristic.fitness import FitnessFunction
+from genetic.individual import IndividualBrush
 import cv2
 
 
@@ -31,12 +31,12 @@ class Genetic:
 
     def start(self, size):
         # initialize variables
-        IndividualBrush.add_brush("resource/brush_01")
-        IndividualBrush.add_brush("resource/brush_02")
-        IndividualBrush.add_brush("resource/brush_03")
+        IndividualBrush.add_brush("resource/1.jpg")
+        IndividualBrush.add_brush("resource/2.jpg")
+        IndividualBrush.add_brush("resource/3.jpg")
         error = self.margin  # allow first iteration
         it = 0
-        population = PaintingPopulation(size)
+        population = PaintingPopulation(self.objective, size)
         heuristic = FitnessFunction()
         # start loop
         while it < Genetic.MAX_ITERATIONS and error >= self.margin:
@@ -45,6 +45,7 @@ class Genetic:
             # save frame to disk
             sample = population.image()
             cv2.imshow("sample_" + str(it), sample)
+            cv2.waitKey(0)
             # update loop conditions
             error = heuristic.error(self.objective, sample)
             print("Error:", error)

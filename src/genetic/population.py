@@ -1,8 +1,10 @@
+import numpy as np
 
 
 class PaintingPopulation:
 
-    def __init__(self, initial_size):
+    def __init__(self, objective, initial_size):
+        self.objective = objective
         self.size = initial_size
         self.individuals = []
 
@@ -12,5 +14,6 @@ class PaintingPopulation:
         we can generate an image from all of them
         :return: image of brushes
         """
-        raise NotImplementedError("TODO")
+        canvas = np.ones(self.objective.shape)
 
+        return canvas
