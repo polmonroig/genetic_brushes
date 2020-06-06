@@ -53,8 +53,8 @@ class IndividualBrush:
         :return: None
         """
         # select a position
-        self.pos = (randint(IndividualBrush.min_pos_x, IndividualBrush.max_pos_x),
-                    randint(IndividualBrush.min_pos_y, IndividualBrush.max_pos_y))
+        self.pos = (randint(IndividualBrush.min_pos_x, IndividualBrush.max_pos_x - 1),
+                    randint(IndividualBrush.min_pos_y, IndividualBrush.max_pos_y - 1))
         # select a direction
         self.direction = uniform(IndividualBrush.min_direction,  IndividualBrush.max_direction)
         # select a brush
