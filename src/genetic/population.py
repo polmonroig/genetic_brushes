@@ -1,3 +1,3 @@
 
 
-class Genetic:
+class PaintingPopulation:
