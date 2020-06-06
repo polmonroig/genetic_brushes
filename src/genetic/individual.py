@@ -1,3 +1,4 @@
+import numpy as np
 from random import randint, uniform
 
 
@@ -13,7 +14,7 @@ class IndividualBrush:
     Attributes:
     self.pos (tuple): position of the brush relative to the painting
     self.direction (float): rotation degree of  the brush
-    self.color (tuple): color of the brush
+    self.color (array): color of the brush
     self.brush (str): filename of the brush to paint
     self.size (float): relative size of the brush
 
@@ -41,7 +42,7 @@ class IndividualBrush:
     def __init__(self):
         self.pos = (0, 0)
         self.direction = 0
-        self.color = (0, 0, 0)
+        self.color = np.array([0, 0, 0])
         self.brush = None
         self.size = 0
 
