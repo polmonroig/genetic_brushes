@@ -17,7 +17,7 @@ class IndividualBrush:
     self.brush (str): filename of the brush to paint
     self.size (float): relative size of the brush
 
-    Static Variables
+    Static Variables:
     brushes (array): list of strings, each string is a brush type
     min_pos_x (int): the min x position where the brush can be placed
     max_pos_x (int): the max x position where the brush can be placed
@@ -46,6 +46,11 @@ class IndividualBrush:
         self.size = 0
 
     def randomize(self):
+        """
+        Given the parameters limits, each parameter of the
+        brush is randomize between its possible values
+        :return: None
+        """
         # select a position
         self.pos = (randint(IndividualBrush.min_pos_x, IndividualBrush.max_pos_x),
                     randint(IndividualBrush.min_pos_y, IndividualBrush.max_pos_y))
