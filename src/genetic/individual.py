@@ -1,4 +1,4 @@
-from random import randint, randrange
+from random import randint, uniform
 
 
 class IndividualBrush:
@@ -55,11 +55,11 @@ class IndividualBrush:
         self.pos = (randint(IndividualBrush.min_pos_x, IndividualBrush.max_pos_x),
                     randint(IndividualBrush.min_pos_y, IndividualBrush.max_pos_y))
         # select a direction
-        self.direction = randrange(IndividualBrush.min_direction,  IndividualBrush.max_direction)
+        self.direction = uniform(IndividualBrush.min_direction,  IndividualBrush.max_direction)
         # select a brush
-        self.brush = IndividualBrush.brushes[randint(0, len(IndividualBrush.brushes))]
+        self.brush = IndividualBrush.brushes[randint(0, len(IndividualBrush.brushes) - 1)]
         # select size
-        self.size = randrange(IndividualBrush.min_size, IndividualBrush.max_size)
+        self.size = uniform(IndividualBrush.min_size, IndividualBrush.max_size)
 
     def set_color(self, color):
         # color is not randomized, it is obtained from the

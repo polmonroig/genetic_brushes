@@ -1,5 +1,5 @@
 import numpy as np
-
+from genetic.individual import IndividualBrush
 
 class PaintingPopulation:
 
@@ -7,6 +7,14 @@ class PaintingPopulation:
         self.objective = objective
         self.size = initial_size
         self.individuals = []
+        self.randomize()
+
+    def randomize(self):
+        for i in range(self.size):
+            brush = IndividualBrush()
+            brush.randomize()
+            brush.set_color((0, 2, 0))
+            self.individuals.append(brush)
 
     def image(self):
         """
