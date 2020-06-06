@@ -1,7 +1,7 @@
-
+from genetic import Genetic
 
 def main():
-    print("Starting application...")
+    print('Starting application...')
 
 
 
