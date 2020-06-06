@@ -9,6 +9,7 @@ class FitnessFunction:
     The individual error is save only for operators that eliminate
     brushes
     """
+
     def error(self, original, generated):
         mse = np.square(original - generated).mean()
         return mse
