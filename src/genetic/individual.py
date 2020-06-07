@@ -70,7 +70,7 @@ class IndividualBrush:
         self.color = color
 
     def __lt__(self, other):
-        return self.error < other.error
+        return self.error > other.error
 
     @staticmethod
     def merge(parent_a, parent_b):

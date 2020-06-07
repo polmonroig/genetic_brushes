@@ -70,7 +70,7 @@ class PaintingPopulation:
             image = IndividualBrush.brushes[ind.brush]
             dim = (int(image.shape[0] * ind.size), int(image.shape[1] * ind.size))
             image = cv2.resize(image, dim)
-            image = PaintingPopulation.rotate_image(image, ind.direction)
+            # image = PaintingPopulation.rotate_image(image, ind.direction)
             self.insert_image(ind.pos, ind.color, image)
         return self.canvas
 
