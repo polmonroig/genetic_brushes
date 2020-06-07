@@ -23,10 +23,12 @@ class Genetic:
     MAX_ITERATIONS (int): given that it is possible that the algorithm loops forever
                           we specify a limit
     """
-    MAX_ITERATIONS = 500
+    MAX_ITERATIONS = 5000
 
     def __init__(self, objective, margin):
         self.objective = cv2.imread(objective)
+        # dim = (self.objective.shape[0] * 2, self.objective.shape[1] * 2)
+        # self.objective = cv2.resize(self.objective, dim)
         self.margin = margin
 
     def start(self, size):

@@ -24,7 +24,7 @@ def main():
     image_file = sys.argv[1]
     error_margin = 0.1
     gen = Genetic(image_file, error_margin)
-    gen.start(10)
+    gen.start(50)
 
 
 if __name__ == '__main__':
