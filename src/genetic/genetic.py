@@ -23,7 +23,7 @@ class Genetic:
     MAX_ITERATIONS (int): given that it is possible that the algorithm loops forever
                           we specify a limit
     """
-    MAX_ITERATIONS = 200
+    MAX_ITERATIONS = 300
 
     def __init__(self, objective, margin):
         self.objective = cv2.imread(objective)
@@ -31,7 +31,10 @@ class Genetic:
 
     def start(self, size):
         # initialize variables
-        IndividualBrush.add_brush("resource/stroke_a.png")
+        IndividualBrush.add_brush("resource/1.jpg")
+        IndividualBrush.add_brush("resource/2.jpg")
+        IndividualBrush.add_brush("resource/3.jpg")
+        IndividualBrush.add_brush("resource/4.jpg")
         IndividualBrush.max_pos_x = self.objective.shape[1]
         IndividualBrush.max_pos_y = self.objective.shape[0]
         error = self.margin  # allow first iteration

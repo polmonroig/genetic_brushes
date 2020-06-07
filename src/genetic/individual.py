@@ -36,8 +36,8 @@ class IndividualBrush:
     max_pos_y = 0
     min_direction = 0
     max_direction = 360
-    min_size = 2
-    max_size = 3
+    min_size = 1
+    max_size = 2
 
     def __init__(self):
         self.pos = (0, 0)
@@ -66,6 +66,28 @@ class IndividualBrush:
         # color is not randomized, it is obtained from the
         # original image
         self.color = color
+
+    @staticmethod
+    def merge(parent_a, parent_b):
+        sibling = IndividualBrush()
+        selection = randint(0, 1)
+        if selection == 0:
+            sibling.pos = parent_a.pos
+        else:
+            sibling.pos = parent_b.pos
+        selection = randint(0, 1)
+        if selection == 0:
+            sibling.direction = parent_a.direction
+        else:
+            sibling.direction = parent_b.direction
+        selection = randint(0, 1)
+        if selection == 0:
+            sibling.brush = parent_a.brush
+        else:
+            sibling.brush = parent_b.brush
+        selection = randint(0, 1)
+        sibling.size = uniform(IndividualBrush.min_size, IndividualBrush.max_size)
+        return sibling
 
     @staticmethod
     def add_brush(brush):
