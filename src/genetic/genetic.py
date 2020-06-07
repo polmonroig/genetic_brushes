@@ -31,9 +31,7 @@ class Genetic:
 
     def start(self, size):
         # initialize variables
-        IndividualBrush.add_brush("resource/1.jpg")
-        IndividualBrush.add_brush("resource/2.jpg")
-        IndividualBrush.add_brush("resource/3.jpg")
+        IndividualBrush.add_brush("resource/stroke_a.png")
         IndividualBrush.max_pos_x = self.objective.shape[1]
         IndividualBrush.max_pos_y = self.objective.shape[0]
         error = self.margin  # allow first iteration

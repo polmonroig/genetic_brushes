@@ -36,13 +36,13 @@ class IndividualBrush:
     max_pos_y = 0
     min_direction = 0
     max_direction = 360
-    min_size = 0.05
-    max_size = 0.2
+    min_size = 0.1
+    max_size = 1
 
     def __init__(self):
         self.pos = (0, 0)
         self.direction = 0
-        self.color = np.array([0, 0, 0])
+        self.color = np.array([0, 0, 0, 0])
         self.brush = None
         self.size = 0
 

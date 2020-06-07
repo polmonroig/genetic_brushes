@@ -40,14 +40,14 @@ class PaintingPopulation:
         # update colors
         for ind in self.individuals:
             color = self.objective[ind.pos[1], ind.pos[0]] / 255.0
-            ind.set_color(color)
+            ind.set_color(np.append(color, 1))
 
     def randomize(self):
         for i in range(self.size):
             brush = IndividualBrush()
             brush.randomize()
             color = self.objective[brush.pos[1], brush.pos[0]] / 255.0
-            brush.set_color(color)
+            brush.set_color(np.append(color, 1))
             self.individuals.append(brush)
 
     def image(self):
@@ -61,7 +61,7 @@ class PaintingPopulation:
             self.canvas.fill(255)
         for ind in self.individuals:
             print("Loading image", ind.brush)
-            image = cv2.imread(ind.brush)
+            image = cv2.imread(ind.brush, cv2.IMREAD_UNCHANGED)
             dim = (int(image.shape[0] * ind.size), int(image.shape[1] * ind.size))
             image = cv2.resize(image, dim)
             image = image * ind.color
@@ -78,10 +78,10 @@ class PaintingPopulation:
         pos_y = pos[1]  # y == row
         if pos_y >= self.canvas.shape[0] - height:
             pos_y = self.canvas.shape[0] - height
-        alpha_image = image[:, :, 0] / 255.0
+        alpha_image = image[:, :, 3] / 255.0
         alpha_canvas = 1.0 - alpha_image
         for c in range(0, 3):
-            self.canvas[pos_y:pos_y + height, pos_x:pos_x + width, c] = (1 * image[:, :, c] +
-                                      0 * self.canvas[pos_y:pos_y + height, pos_x:pos_x + width, c])
+            self.canvas[pos_y:pos_y + height, pos_x:pos_x + width, c] = (alpha_image * image[:, :, c] +
+                                      alpha_canvas * self.canvas[pos_y:pos_y + height, pos_x:pos_x + width, c])
 
 
