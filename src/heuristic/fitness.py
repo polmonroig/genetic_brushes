@@ -11,5 +11,6 @@ class FitnessFunction:
     """
 
     def error(self, original, generated):
+        generated = generated[:, :, :3]
         mse = np.square(original - generated).mean()
         return mse

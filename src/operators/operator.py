@@ -1,3 +1,4 @@
+from genetic.individual import IndividualBrush
 
 
 class Mutation:
@@ -12,6 +13,9 @@ class Mutation:
         :param individuals: objects where the operation will be applied
         :return: list of resulting offsprings based on the operation
         """
+        # limit min_size
+        IndividualBrush.min_size -= 0.01
+        IndividualBrush.max_size -= 0.01
         for ind in individuals:
             ind.randomize()
         return individuals

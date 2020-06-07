@@ -40,14 +40,14 @@ class PaintingPopulation:
         # update colors
         for ind in self.individuals:
             color = self.objective[ind.pos[1], ind.pos[0]] / 255.0
-            ind.set_color(np.append(color, 1))
+            ind.set_color(color)
 
     def randomize(self):
         for i in range(self.size):
             brush = IndividualBrush()
             brush.randomize()
             color = self.objective[brush.pos[1], brush.pos[0]] / 255.0
-            brush.set_color(np.append(color, 1))
+            brush.set_color(color)
             self.individuals.append(brush)
 
     def image(self):
@@ -57,14 +57,16 @@ class PaintingPopulation:
         :return: image of brushes
         """
         if self.canvas is None:
-            self.canvas = np.ones(self.objective.shape, dtype=np.uint8)
+            self.canvas = np.zeros((self.objective.shape[0], self.objective.shape[1], 4), dtype=np.uint8)
             self.canvas.fill(255)
+            self.canvas[:, :, 3] = np.zeros((self.objective.shape[0], self.objective.shape[1]))
         for ind in self.individuals:
             print("Loading image", ind.brush)
             image = cv2.imread(ind.brush, cv2.IMREAD_UNCHANGED)
             dim = (int(image.shape[0] * ind.size), int(image.shape[1] * ind.size))
             image = cv2.resize(image, dim)
-            image = image * ind.color
+            image = PaintingPopulation.rotate_image(image, ind.direction)
+            image[:, :, :3] = image[:, :, :3] * ind.color
             self.insert_image(ind.pos, image)
 
         return self.canvas
@@ -80,8 +82,13 @@ class PaintingPopulation:
             pos_y = self.canvas.shape[0] - height
         alpha_image = image[:, :, 3] / 255.0
         alpha_canvas = 1.0 - alpha_image
-        for c in range(0, 3):
+        for c in range(0, 4):
             self.canvas[pos_y:pos_y + height, pos_x:pos_x + width, c] = (alpha_image * image[:, :, c] +
                                       alpha_canvas * self.canvas[pos_y:pos_y + height, pos_x:pos_x + width, c])
 
-
+    @staticmethod
+    def rotate_image(image, angle):
+        width, height = image.shape[:2]
+        center = (width // 2, height // 2)
+        rotation_matrix = cv2.getRotationMatrix2D(center, angle, 1)
+        return cv2.warpAffine(image, rotation_matrix, (height, width))
