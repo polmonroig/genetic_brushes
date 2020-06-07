@@ -31,10 +31,15 @@ class PaintingPopulation:
         self.canvas = None
         self.individuals = []
         self.randomize()
-        self.operators = [Mutation()]
+        self.operators = [Mutation(), Selection(), Crossover()]
 
-    def update(self):
-        # first apply operators
+    def update(self, error):
+        # apply error to each mutation
+        for ind in self.individuals:
+            if ind.error == 0:
+                ind.error = error * ind.size
+
+        # apply operators
         for operator in self.operators:
             self.individuals = operator.op(self.individuals)
         # update colors
@@ -61,12 +66,11 @@ class PaintingPopulation:
             self.canvas.fill(255)
             #self.canvas[:, :, 2] = np.zeros((self.objective.shape[0], self.objective.shape[1]))
         for ind in self.individuals:
-            print("Loading image", ind.brush)
+            # print("Loading image", ind.brush)
             image = IndividualBrush.brushes[ind.brush]
             dim = (int(image.shape[0] * ind.size), int(image.shape[1] * ind.size))
             image = cv2.resize(image, dim)
-            print("Size:", ind.size)
-            # image = PaintingPopulation.rotate_image(image, ind.direction)
+            image = PaintingPopulation.rotate_image(image, ind.direction)
             self.insert_image(ind.pos, ind.color, image)
         return self.canvas
 

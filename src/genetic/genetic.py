@@ -23,7 +23,7 @@ class Genetic:
     MAX_ITERATIONS (int): given that it is possible that the algorithm loops forever
                           we specify a limit
     """
-    MAX_ITERATIONS = 300
+    MAX_ITERATIONS = 500
 
     def __init__(self, objective, margin):
         self.objective = cv2.imread(objective)
@@ -52,7 +52,7 @@ class Genetic:
             print("Error:", error)
             it += 1
             # update population
-            population.update()
+            population.update(error)
 
     @staticmethod
     def integer_padding(i, max):

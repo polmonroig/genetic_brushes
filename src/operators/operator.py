@@ -37,6 +37,7 @@ class Selection:
         :param individuals: objects where the operation will be applied
         :return: list of resulting offsprings based on the operation
         """
+        individuals.sort()
         return individuals[int(len(individuals) * 0.6):]
 
 
@@ -53,7 +54,9 @@ class Crossover:
         """
 
         initial_size = len(individuals)
-        for i in range(1, initial_size):
-            individuals.append(IndividualBrush.merge(individuals[i - 1], individuals[i]))
+        increase = 2
+        for j in range(increase):
+            for i in range(1, initial_size):
+                individuals.append(IndividualBrush.merge(individuals[i - 1], individuals[i]))
 
         return individuals

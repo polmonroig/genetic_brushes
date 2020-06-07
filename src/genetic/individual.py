@@ -46,6 +46,7 @@ class IndividualBrush:
         self.color = np.array([0, 0, 0])
         self.brush = None
         self.size = 0
+        self.error = 0
 
     def randomize(self):
         """
@@ -67,6 +68,9 @@ class IndividualBrush:
         # color is not randomized, it is obtained from the
         # original image
         self.color = color
+
+    def __lt__(self, other):
+        return self.error < other.error
 
     @staticmethod
     def merge(parent_a, parent_b):
