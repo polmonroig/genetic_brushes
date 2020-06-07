@@ -31,7 +31,7 @@ class PaintingPopulation:
         self.canvas = None
         self.individuals = []
         self.randomize()
-        self.operators = [Mutation(), Selection(), Crossover()]
+        self.operators = [Mutation()]
 
     def update(self):
         # first apply operators
@@ -62,9 +62,10 @@ class PaintingPopulation:
             #self.canvas[:, :, 2] = np.zeros((self.objective.shape[0], self.objective.shape[1]))
         for ind in self.individuals:
             print("Loading image", ind.brush)
-            image = cv2.imread(ind.brush) / 255.0
+            image = IndividualBrush.brushes[ind.brush]
             dim = (int(image.shape[0] * ind.size), int(image.shape[1] * ind.size))
             image = cv2.resize(image, dim)
+            print("Size:", ind.size)
             # image = PaintingPopulation.rotate_image(image, ind.direction)
             self.insert_image(ind.pos, ind.color, image)
         return self.canvas

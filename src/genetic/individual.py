@@ -1,4 +1,5 @@
 import numpy as np
+import cv2
 from random import randint, uniform
 
 
@@ -36,8 +37,8 @@ class IndividualBrush:
     max_pos_y = 0
     min_direction = 0
     max_direction = 360
-    min_size = 1
-    max_size = 2
+    min_size = 0.5
+    max_size = 1
 
     def __init__(self):
         self.pos = (0, 0)
@@ -58,7 +59,7 @@ class IndividualBrush:
         # select a direction
         self.direction = uniform(IndividualBrush.min_direction,  IndividualBrush.max_direction)
         # select a brush
-        self.brush = IndividualBrush.brushes[randint(0, len(IndividualBrush.brushes) - 1)]
+        self.brush = randint(0, len(IndividualBrush.brushes) - 1)
         # select size
         self.size = uniform(IndividualBrush.min_size, IndividualBrush.max_size)
 
@@ -91,4 +92,4 @@ class IndividualBrush:
 
     @staticmethod
     def add_brush(brush):
-        IndividualBrush.brushes.append(brush)
+        IndividualBrush.brushes.append(cv2.imread(brush) / 255.0)

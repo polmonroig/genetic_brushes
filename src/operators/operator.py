@@ -8,7 +8,7 @@ class Mutation:
     creation of new, unseen states
     """
 
-    MIN_SIZE = 0.01
+    MIN_SIZE = 0.1
 
     def op(self, individuals):
         """
@@ -18,8 +18,9 @@ class Mutation:
         """
         # limit min_size
         if IndividualBrush.min_size >= Mutation.MIN_SIZE:
-            IndividualBrush.min_size -= 0.01
-            IndividualBrush.max_size -= 0.01
+            IndividualBrush.min_size -= 0.005
+        if IndividualBrush.max_size > IndividualBrush.min_size:
+            IndividualBrush.max_size -= 0.005
         for ind in individuals:
             ind.randomize()
         return individuals
@@ -36,7 +37,7 @@ class Selection:
         :param individuals: objects where the operation will be applied
         :return: list of resulting offsprings based on the operation
         """
-        return individuals[:int(len(individuals) * 0.6)]
+        return individuals[int(len(individuals) * 0.6):]
 
 
 class Crossover:

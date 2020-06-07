@@ -46,10 +46,18 @@ class Genetic:
             print("Iteration", it)
             # save frame to disk
             sample = population.image()
-            cv2.imwrite("frames/sample_" + str(it) + ".png", sample)
+            cv2.imwrite("frames/sample_" + Genetic.integer_padding(it, 3) + ".png", sample)
             # update loop conditions
             error = heuristic.error(self.objective, sample)
             print("Error:", error)
             it += 1
             # update population
             population.update()
+
+    @staticmethod
+    def integer_padding(i, max):
+        i = str(i)
+        while len(i) < 3:
+            i = '0' + i
+        return i
+
