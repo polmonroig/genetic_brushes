@@ -25,19 +25,38 @@ class PaintingPopulation:
     self.operators (array): list of operators that are applied to the population on an update
     """
 
-    def __init__(self, objective, initial_size):
+    def __init__(self, objective, initial_size, total_steps):
         self.objective = objective
         self.size = initial_size
         self.canvas = None
         self.individuals = []
         self.randomize()
         self.operators = [Mutation(), Selection(), Crossover()]
+        self.min_size = 0.05
+        self.max_size = 1
+        self.step_size = (self.max_size - self.min_size) / total_steps
+        self.generation = -1
+        self.update_size()
 
-    def update(self, error):
+    def update_size(self):
+        self.generation += 1
+        # update size
+        # limit min_size
+        value = self.max_size - self.generation * self.step_size
+        IndividualBrush.min_size = value
+        IndividualBrush.max_size = value + 0.5
+
+    def update(self, heuristic):
+
+        self.update_size()
         # apply error to each mutation
         for ind in self.individuals:
             if ind.error == 0:
-                ind.error = error * ind.size
+                image = IndividualBrush.brushes[ind.brush]
+                width = image.shape[1]
+                height = image.shape[0]
+                pos_x, pos_y = ind.pos
+                ind.error = heuristic.error(self.objective[pos_y:pos_y + height, pos_x:pos_x + width], self.canvas[pos_y:pos_y + height, pos_x:pos_x + width])
 
         # apply operators
         for operator in self.operators:

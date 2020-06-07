@@ -23,7 +23,7 @@ class Genetic:
     MAX_ITERATIONS (int): given that it is possible that the algorithm loops forever
                           we specify a limit
     """
-    MAX_ITERATIONS = 500
+    MAX_ITERATIONS = 1000
 
     def __init__(self, objective, margin):
         self.objective = cv2.imread(objective)
@@ -37,9 +37,10 @@ class Genetic:
         IndividualBrush.add_brush("resource/4.jpg")
         IndividualBrush.max_pos_x = self.objective.shape[1]
         IndividualBrush.max_pos_y = self.objective.shape[0]
+
         error = self.margin  # allow first iteration
         it = 0
-        population = PaintingPopulation(self.objective, size)
+        population = PaintingPopulation(self.objective, size, Genetic.MAX_ITERATIONS)
         heuristic = FitnessFunction()
         # start loop
         while it < Genetic.MAX_ITERATIONS and error >= self.margin:
@@ -52,7 +53,7 @@ class Genetic:
             print("Error:", error)
             it += 1
             # update population
-            population.update(error)
+            population.update(heuristic)
 
     @staticmethod
     def integer_padding(i, max):

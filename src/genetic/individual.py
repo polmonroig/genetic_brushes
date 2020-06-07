@@ -37,8 +37,8 @@ class IndividualBrush:
     max_pos_y = 0
     min_direction = 0
     max_direction = 360
-    min_size = 0.5
-    max_size = 1
+    min_size = 1
+    max_size = 2
 
     def __init__(self):
         self.pos = (0, 0)
