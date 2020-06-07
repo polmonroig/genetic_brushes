@@ -32,17 +32,22 @@ class PaintingPopulation:
         self.individuals = []
         self.randomize()
         self.operators = [Mutation(), Selection(), Crossover()]
-        self.min_size = 0.05
-        self.max_size = 1
-        self.step_size = (self.max_size - self.min_size) / total_steps
+        self.min_size = 0.01
+        self.max_size = 0.5
+        self.step_size = (self.max_size - self.min_size) / (total_steps * 0.5)
         self.generation = -1
         self.update_size()
+        gx = cv2.Sobel(self.objective, cv2.CV_32F, 1, 0, ksize=1)
+        gy = cv2.Sobel(self.objective, cv2.CV_32F, 0, 1, ksize=1)
+        self.objective_magnitude, self.objective_angle = cv2.cartToPolar(gx, gy, angleInDegrees=True)
+        self.objective_magnitude /= self.objective_magnitude.max()
+
 
     def update_size(self):
         self.generation += 1
         # update size
         # limit min_size
-        value = self.max_size - self.generation * self.step_size
+        value = max(self.max_size - self.generation * self.step_size, self.min_size)
         IndividualBrush.min_size = value
         IndividualBrush.max_size = value + 0.5
 
@@ -89,7 +94,8 @@ class PaintingPopulation:
             image = IndividualBrush.brushes[ind.brush]
             dim = (int(image.shape[0] * ind.size), int(image.shape[1] * ind.size))
             image = cv2.resize(image, dim)
-            # image = PaintingPopulation.rotate_image(image, ind.direction)
+            direction = ind.direction * (1 - self.objective_magnitude[ind.pos[1], ind.pos[0], 0]) + self.objective_angle[ind.pos[1], ind.pos[0], 0]
+            image = PaintingPopulation.rotate_image(image, direction)
             self.insert_image(ind.pos, ind.color, image)
         return self.canvas
 
