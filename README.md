@@ -13,7 +13,7 @@ and crossover. Mutation works by randomizin a specific feature of the current ge
 After the mutation a crossover between different pairs of individuals. Finally we select the brushes 
 based on their importance as explained before.  
 ![genetic](docs/drawing.png)
-![example](docs/bitmap.png)
+![sample](docs/sample.png)
  
 
 # Requirements 
