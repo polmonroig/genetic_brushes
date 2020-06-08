@@ -33,7 +33,7 @@ class Selection:
         :return: list of resulting offsprings based on the operation
         """
         individuals.sort()
-        return individuals [:50]  # get individuals with more importance only
+        return individuals[:10]  # get individuals with more importance only
 
 
 class Crossover:

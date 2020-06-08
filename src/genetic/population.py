@@ -33,7 +33,7 @@ class PaintingPopulation:
         self.individuals = []
         self.randomize()
         self.operators = [Mutation(), Crossover(), Selection()]
-        self.min_size = 0.03
+        self.min_size = 0.05
         self.max_size = 1
         self.total_steps = total_steps
         self.step_size = (self.max_size - self.min_size) / (total_steps * 0.3)
@@ -57,7 +57,7 @@ class PaintingPopulation:
         value = max(self.max_size - self.generation * self.step_size, self.min_size)
         IndividualBrush.min_size = value
         IndividualBrush.max_size = value
-        self.blur = max(5, self.blur - 0.1)
+        self.blur = max(1, self.blur - 0.1)
         self.importance = cv2.cvtColor(self.objective_magnitude, cv2.COLOR_GRAY2BGR)
         self.importance = cv2.GaussianBlur(self.importance, (0, 0), self.blur)
 
