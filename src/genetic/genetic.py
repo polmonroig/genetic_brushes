@@ -1,5 +1,5 @@
 from genetic.population import PaintingPopulation
-from heuristic.fitness import FitnessFunction
+from heuristic.fitness import ImageError
 from genetic.individual import IndividualBrush
 import cv2
 
@@ -43,7 +43,7 @@ class Genetic:
         error = self.margin  # allow first iteration
         it = 0
         population = PaintingPopulation(self.objective, size, Genetic.MAX_ITERATIONS)
-        heuristic = FitnessFunction()
+        heuristic = ImageError()
         output_per_generation = 20
         # start loop
         while it < Genetic.MAX_ITERATIONS and error >= self.margin:
@@ -51,19 +51,19 @@ class Genetic:
                 print("Iteration", it)
             # save frame to disk
             sample = population.image()
-            cv2.imwrite("frames/sample_" + Genetic.integer_padding(it, 3) + ".png", sample)
+            cv2.imwrite("frames/sample_" + Genetic.integer_padding(it, len(str(Genetic.MAX_ITERATIONS))) + ".png", sample)
             # update loop conditions
             error = heuristic.error(self.objective, sample)
             if it % output_per_generation == 0:
                 print("Error:", error)
             it += 1
             # update population
-            population.update(heuristic)
+            population.update()
 
     @staticmethod
-    def integer_padding(i, max):
+    def integer_padding(i, padding):
         i = str(i)
-        while len(i) < 3:
+        while len(i) < padding:
             i = '0' + i
         return i
 

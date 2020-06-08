@@ -2,6 +2,7 @@ import numpy as np
 import cv2
 from genetic.individual import IndividualBrush
 from operators.operator import Mutation, Crossover, Selection
+from heuristic.fitness import IndividualImportance
 
 
 class PaintingPopulation:
@@ -31,44 +32,44 @@ class PaintingPopulation:
         self.canvas = None
         self.individuals = []
         self.randomize()
-        self.operators = [Mutation()]
+        self.operators = [Mutation(), Crossover(), Selection()]
         self.min_size = 0.03
-        self.max_size = 2
+        self.max_size = 1
         self.total_steps = total_steps
-        self.step_size = (self.max_size - self.min_size) / total_steps
+        self.step_size = (self.max_size - self.min_size) / (total_steps * 0.3)
         self.generation = -1
+        # calculate importance of the image based on filter
         colored = cv2.cvtColor(self.objective, cv2.COLOR_BGR2GRAY)
         gx = cv2.Sobel(colored, cv2.CV_32F, 1, 0, ksize=1)
         gy = cv2.Sobel(colored, cv2.CV_32F, 0, 1, ksize=1)
         self.objective_magnitude, self.objective_angle = cv2.cartToPolar(gx, gy, angleInDegrees=True)
         self.objective_magnitude /= self.objective_magnitude.max()
         self.blur = 50
-        self.blured = cv2.cvtColor(self.objective_magnitude, cv2.COLOR_GRAY2BGR)
-        self.blured = cv2.GaussianBlur(self.blured, (0, 0), self.blur)
+        self.importance = cv2.cvtColor(self.objective_magnitude, cv2.COLOR_GRAY2BGR)
+        self.importance = cv2.GaussianBlur(self.importance, (0, 0), self.blur)
+        self.importance_heuristic = IndividualImportance()
 
     def update_size(self):
         self.generation += 1
         # update size
         # limit min_size
-        value = self.max_size
-        if self.generation >= self.total_steps * 0.10:
-            value = max(self.max_size - self.generation * self.step_size, self.min_size)
+
+        value = max(self.max_size - self.generation * self.step_size, self.min_size)
         IndividualBrush.min_size = value
         IndividualBrush.max_size = value
         self.blur = max(5, self.blur - 0.1)
-        self.blured = cv2.cvtColor(self.objective_magnitude, cv2.COLOR_GRAY2BGR)
-        self.blured = cv2.GaussianBlur(self.blured, (0, 0), self.blur)
+        self.importance = cv2.cvtColor(self.objective_magnitude, cv2.COLOR_GRAY2BGR)
+        self.importance = cv2.GaussianBlur(self.importance, (0, 0), self.blur)
 
-    def update(self, heuristic):
+    def update(self):
         self.update_size()
         # apply error to each mutation
         for ind in self.individuals:
-            if ind.error == 0:
-                image = IndividualBrush.brushes[ind.brush]
-                width = image.shape[1]
-                height = image.shape[0]
-                pos_x, pos_y = ind.pos
-                ind.error = heuristic.error(self.objective[pos_y:pos_y + height, pos_x:pos_x + width], self.canvas[pos_y:pos_y + height, pos_x:pos_x + width])
+            image = IndividualBrush.brushes[ind.brush]
+            width = image.shape[1]
+            height = image.shape[0]
+            pos_x, pos_y = ind.pos
+            ind.importance = self.importance_heuristic.error(self.importance[pos_y:pos_y + height, pos_x:pos_x + width])
 
         # apply operators
         for operator in self.operators:
@@ -96,6 +97,7 @@ class PaintingPopulation:
             self.canvas = np.zeros((self.objective.shape[0], self.objective.shape[1], 3), dtype=np.uint8)
             self.canvas.fill(255)
             #self.canvas[:, :, 2] = np.zeros((self.objective.shape[0], self.objective.shape[1]))
+        #print("Painting", len(self.individuals), "individuals")
         for ind in self.individuals:
             image = IndividualBrush.brushes[ind.brush]
             dim = (int(image.shape[0] * ind.size), int(image.shape[1] * ind.size))
@@ -106,6 +108,7 @@ class PaintingPopulation:
         return self.canvas
 
     def insert_image(self, pos, color, image):
+        # calculate size and position
         width = image.shape[1]
         height = image.shape[0]
         pos_x = pos[0]  # x == col
@@ -116,8 +119,8 @@ class PaintingPopulation:
             pos_y = self.canvas.shape[0] - height
 
         alpha_canvas = 1.0 - image
-
-        foreground = (1.0 - self.blured[pos_y:pos_y + height, pos_x:pos_x + width]) * (image * color)
+        # apply color to image
+        foreground = (1.0 - self.importance[pos_y:pos_y + height, pos_x:pos_x + width]) * (image * color)
         background = alpha_canvas * self.canvas[pos_y:pos_y + height, pos_x:pos_x + width]
         self.canvas[pos_y:pos_y + height, pos_x:pos_x + width] = cv2.add(foreground, background)
 

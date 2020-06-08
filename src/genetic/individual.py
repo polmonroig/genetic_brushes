@@ -1,6 +1,6 @@
 import numpy as np
 import cv2
-from random import randint, uniform
+from random import randint, uniform, random
 
 
 class IndividualBrush:
@@ -46,7 +46,7 @@ class IndividualBrush:
         self.color = np.array([0, 0, 0])
         self.brush = None
         self.size = 0
-        self.error = 0
+        self.importance = 0
 
     def randomize(self):
         """
@@ -64,22 +64,43 @@ class IndividualBrush:
         # select size
         self.size = uniform(IndividualBrush.min_size, IndividualBrush.max_size)
 
+    def randomize_item(self):
+        """
+        Given the parameters limits, each parameter of the
+        brush is randomize between its possible values
+        :return: None
+        """
+        # select a position
+        selection = randint(0, 1)
+        if selection == 0:
+            self.pos = (randint(IndividualBrush.min_pos_x, IndividualBrush.max_pos_x - 1),
+                    randint(IndividualBrush.min_pos_y, IndividualBrush.max_pos_y - 1))
+        # select a direction
+        selection = randint(0, 1)
+        if selection == 0:
+            self.direction = uniform(IndividualBrush.min_direction,  IndividualBrush.max_direction)
+        # select a brush
+        selection = randint(0, 1)
+        if selection == 0:
+            self.brush = randint(0, len(IndividualBrush.brushes) - 1)
+        # select size
+        selection = randint(0, 1)
+        if selection == 0:
+            self.size = uniform(IndividualBrush.min_size, IndividualBrush.max_size)
+
     def set_color(self, color):
         # color is not randomized, it is obtained from the
         # original image
         self.color = color
 
     def __lt__(self, other):
-        return self.error > other.error
+        return self.importance > other.importance
 
     @staticmethod
     def merge(parent_a, parent_b):
         sibling = IndividualBrush()
         selection = randint(0, 1)
-        if selection == 0:
-            sibling.pos = parent_a.pos
-        else:
-            sibling.pos = parent_b.pos
+        sibling.pos = ((parent_a.pos[0] + parent_b.pos[0]) // 2, (parent_a.pos[1] + parent_b.pos[1]) // 2)
         selection = randint(0, 1)
         if selection == 0:
             sibling.direction = parent_a.direction
@@ -90,8 +111,8 @@ class IndividualBrush:
             sibling.brush = parent_a.brush
         else:
             sibling.brush = parent_b.brush
-        selection = randint(0, 1)
         sibling.size = uniform(IndividualBrush.min_size, IndividualBrush.max_size)
+        sibling.importance = (parent_a.importance + parent_b.importance) // 2
         return sibling
 
     @staticmethod

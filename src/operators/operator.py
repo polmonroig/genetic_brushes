@@ -17,7 +17,7 @@ class Mutation:
         :return: list of resulting offsprings based on the operation
         """
         for ind in individuals:
-            ind.randomize()
+            ind.randomize_item()
         return individuals
 
 
@@ -33,7 +33,7 @@ class Selection:
         :return: list of resulting offsprings based on the operation
         """
         individuals.sort()
-        return individuals[int(len(individuals) * 0.6):]
+        return individuals [:50]  # get individuals with more importance only
 
 
 class Crossover:
