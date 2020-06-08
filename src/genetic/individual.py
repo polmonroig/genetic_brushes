@@ -35,8 +35,8 @@ class IndividualBrush:
     max_pos_x = 0
     min_pos_y = 0
     max_pos_y = 0
-    min_direction = -180
-    max_direction = 180
+    min_direction = -90
+    max_direction = 90
     min_size = 1
     max_size = 2
 

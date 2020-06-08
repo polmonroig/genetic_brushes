@@ -23,7 +23,7 @@ class Genetic:
     MAX_ITERATIONS (int): given that it is possible that the algorithm loops forever
                           we specify a limit
     """
-    MAX_ITERATIONS = 5000
+    MAX_ITERATIONS = 1000
 
     def __init__(self, objective, margin):
         self.objective = cv2.imread(objective)
@@ -44,16 +44,17 @@ class Genetic:
         it = 0
         population = PaintingPopulation(self.objective, size, Genetic.MAX_ITERATIONS)
         heuristic = FitnessFunction()
+        output_per_generation = 20
         # start loop
         while it < Genetic.MAX_ITERATIONS and error >= self.margin:
-            if it % 100 == 0:
+            if it % output_per_generation == 0:
                 print("Iteration", it)
             # save frame to disk
             sample = population.image()
             cv2.imwrite("frames/sample_" + Genetic.integer_padding(it, 3) + ".png", sample)
             # update loop conditions
             error = heuristic.error(self.objective, sample)
-            if it % 100 == 0:
+            if it % output_per_generation == 0:
                 print("Error:", error)
             it += 1
             # update population

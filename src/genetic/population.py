@@ -33,37 +33,33 @@ class PaintingPopulation:
         self.randomize()
         self.operators = [Mutation()]
         self.min_size = 0.03
-        self.max_size = 0.2
-        self.step_size = (self.max_size - self.min_size) / (total_steps * 0.5)
+        self.max_size = 2
+        self.total_steps = total_steps
+        self.step_size = (self.max_size - self.min_size) / total_steps
         self.generation = -1
-        self.update_size()
         colored = cv2.cvtColor(self.objective, cv2.COLOR_BGR2GRAY)
         gx = cv2.Sobel(colored, cv2.CV_32F, 1, 0, ksize=1)
         gy = cv2.Sobel(colored, cv2.CV_32F, 0, 1, ksize=1)
         self.objective_magnitude, self.objective_angle = cv2.cartToPolar(gx, gy, angleInDegrees=True)
         self.objective_magnitude /= self.objective_magnitude.max()
-        self.blur_kernel = 1
+        self.blur = 50
         self.blured = cv2.cvtColor(self.objective_magnitude, cv2.COLOR_GRAY2BGR)
-        self.blured = cv2.GaussianBlur(self.blured, (0, 0), self.blur_kernel)
-
-
-    def best_positions(self):
-        pos = np.indices(dimensions=self.blured.shape)
-        pos = pos.reshape(2, pos.shape[1] * pos.shape[2], 3)
-        img_flat = np.clip(self.blured.flatten() / self.blured.flatten().sum(), 0.0, 1.0)
-        return pos[:, np.random.choice(np.arange(pos.shape[1]), 1, p=img_flat)]
+        self.blured = cv2.GaussianBlur(self.blured, (0, 0), self.blur)
 
     def update_size(self):
         self.generation += 1
         # update size
         # limit min_size
-        value = max(self.max_size - self.generation * self.step_size, self.min_size)
+        value = self.max_size
+        if self.generation >= self.total_steps * 0.10:
+            value = max(self.max_size - self.generation * self.step_size, self.min_size)
         IndividualBrush.min_size = value
         IndividualBrush.max_size = value
+        self.blur = max(5, self.blur - 0.1)
+        self.blured = cv2.cvtColor(self.objective_magnitude, cv2.COLOR_GRAY2BGR)
+        self.blured = cv2.GaussianBlur(self.blured, (0, 0), self.blur)
 
     def update(self, heuristic):
-        self.blur_kernel = max(1, self.blur_kernel - 0.1)
-        self.blured = cv2.GaussianBlur(self.blured, (0, 0), self.blur_kernel)
         self.update_size()
         # apply error to each mutation
         for ind in self.individuals:
@@ -121,7 +117,7 @@ class PaintingPopulation:
 
         alpha_canvas = 1.0 - image
 
-        foreground = (1.0 - 2self.blured[pos_y:pos_y + height, pos_x:pos_x + width]) * (image * color)
+        foreground = (1.0 - self.blured[pos_y:pos_y + height, pos_x:pos_x + width]) * (image * color)
         background = alpha_canvas * self.canvas[pos_y:pos_y + height, pos_x:pos_x + width]
         self.canvas[pos_y:pos_y + height, pos_x:pos_x + width] = cv2.add(foreground, background)
 
