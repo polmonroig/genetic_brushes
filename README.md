@@ -7,6 +7,9 @@ more realistic paintings overall. To improve the perfomance of the algorithm we 
 information to the brushes such as the color of the original image are their position, and the importance 
 of that position. The importance of a position of the image is calculated on a convoluted filter of 
 vertical and horizontal edges. 
+
+# Implementation 
+![genetic](docs/drawing.png)
  
 
 # Requirements 
