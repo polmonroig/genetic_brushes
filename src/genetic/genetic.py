@@ -46,13 +46,15 @@ class Genetic:
         heuristic = FitnessFunction()
         # start loop
         while it < Genetic.MAX_ITERATIONS and error >= self.margin:
-            print("Iteration", it)
+            if it % 100 == 0:
+                print("Iteration", it)
             # save frame to disk
             sample = population.image()
             cv2.imwrite("frames/sample_" + Genetic.integer_padding(it, 3) + ".png", sample)
             # update loop conditions
             error = heuristic.error(self.objective, sample)
-            print("Error:", error)
+            if it % 100 == 0:
+                print("Error:", error)
             it += 1
             # update population
             population.update(heuristic)
