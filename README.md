@@ -13,6 +13,11 @@ and crossover. Mutation works by randomizin a specific feature of the current ge
 After the mutation a crossover between different pairs of individuals. Finally we select the brushes 
 based on their importance as explained before.  
 ![genetic](docs/drawing.png)
+The following image sequence is just a peek at what the algorithm is capable of generating. A total of 
+2000 frames where generated to achieve a realistic painting look in this example, the sample images are 
+some samples of all the frames that demostrate the continuity of the painting. To get this results a lot 
+of frames where used, but when tuning the hyperparameters we can get results with much fewer frames. In 
+other words, the speed can be selected. 
 ![sample](docs/sample.png)
  
 
